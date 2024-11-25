@@ -14,29 +14,45 @@ datasource db {
 }
 
 
+
 model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String?
-  completed   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String?
+  completed      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
   organizationId Int
   organization   Organization? @relation(fields: [organizationId], references: [id])
+  projectId      Int?
+  project        Project? @relation(fields: [projectId], references: [id])
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tasks     Task[]
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  password       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tasks          Task[]
   organizationId Int?
   organization   Organization? @relation(fields: [organizationId], references: [id])
+  projects       Project[] @relation("UserProjects")
+}
+model Project {
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  organizationId Int
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  tasks          Task[]
+  users          User[] @relation("UserProjects")
+  userId        Int
 }
 
 model Organization {
@@ -47,4 +63,5 @@ model Organization {
   updatedAt DateTime @updatedAt
   users     User[]
   tasks     Task[]
+  projects  Project[]
 }
