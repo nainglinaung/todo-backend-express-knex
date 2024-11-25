@@ -80,7 +80,11 @@ const update = async (req, res) => {
             organizationId
         },
         });
-        return res.status(200).json(user);
+        const token = jwt.sign({ id: user.id, email: user.email, organizationId:user.organizationId }, process.env.JWT_SECRET, {
+            expiresIn: '1h',
+        });
+
+        return res.status(200).json({token});
   } catch (error) {
     res.status(500).json({ error: 'Failed to update user' });
   }
@@ -128,6 +132,6 @@ module.exports = {
   update,
   getAll,
   get,
-    remove,
-    login,
+  remove,
+  login,
 };
