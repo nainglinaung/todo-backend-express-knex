@@ -2,37 +2,41 @@
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { createCommentSchema, updateCommentSchema } = require('./comment.schema');
 
 const create = async (req, res) => {
   const { text, taskId } = req.body;
   try {
+    const commentData = await createCommentSchema.validate(req.body);
+
+
     const comment = await prisma.comment.create({
       data: {
-        text,
-        taskId,
+        ...commentData,
         userId: req.user.id,
       },
     });
     res.status(201).json(comment);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to create comment' });
+    res.status(500).json({ error: error.message });
   }
 };
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const { text } = req.body;
+
   try {
+
+    const payload = await updateCommentSchema.validate(req.body);
+   
     const comment = await prisma.comment.update({
       where: { id: parseInt(id), userId: req.user.id },
-      data: {
-        text,
-      },
+      data: payload,
     });
     res.status(200).json(comment);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update comment' });
+    res.status(500).json({ error: error.message });
   }
 };
 
