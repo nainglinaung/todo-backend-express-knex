@@ -74,7 +74,9 @@ const update = async (req, res) => {
   
     const payload = await updateSchema.validate(req.body);
     
-    payload.password = await bcrypt.hash(payload.password, 10);
+    if (payload.password) {
+      payload.password = await bcrypt.hash(payload.password, 10);
+    }
     
     try {
       

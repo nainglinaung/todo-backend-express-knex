@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,59 +7,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model Task {
-  id             Int      @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   title          String
   description    String?
-  completed      Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  completed      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   userId         Int
-  user           User     @relation(fields: [userId], references: [id])
   organizationId Int
-  organization   Organization? @relation(fields: [organizationId], references: [id])
   projectId      Int?
-  project        Project? @relation(fields: [projectId], references: [id])
   comments       Comment[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  project        Project?     @relation(fields: [projectId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   name           String
-  email          String   @unique
+  email          String        @unique
   password       String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  tasks          Task[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   organizationId Int?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  projects       Project[] @relation("UserProjects")
   comments       Comment[]
+  tasks          Task[]
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  projects       Project[]     @relation("UserProjects")
 }
+
 model Project {
-  id             Int      @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   name           String
   description    String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   organizationId Int
+  userId         Int
   organization   Organization @relation(fields: [organizationId], references: [id])
   tasks          Task[]
-  users          User[] @relation("UserProjects")
-  userId        Int
+  users          User[]       @relation("UserProjects")
 }
 
 model Organization {
-  id        Int      @id @default(autoincrement())
-  name      String
+  id          Int       @id @default(autoincrement())
+  name        String
   description String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-  tasks     Task[]
-  projects  Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  projects    Project[]
+  tasks       Task[]
+  users       User[]
 }
 
 model Comment {
@@ -74,7 +67,7 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   taskId    Int
-  task      Task     @relation(fields: [taskId], references: [id])
   userId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
