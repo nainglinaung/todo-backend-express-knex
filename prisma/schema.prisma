@@ -45,6 +45,7 @@ model Project {
   updatedAt      DateTime     @updatedAt
   organizationId Int
   userId         Int
+  anotherField   String?
   organization   Organization @relation(fields: [organizationId], references: [id])
   tasks          Task[]
   users          User[]       @relation("UserProjects")
