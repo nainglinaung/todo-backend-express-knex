@@ -2,44 +2,43 @@
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { createTaskSchema, updateTaskSchema } = require('./task.schema');
+
 
 const create = async (req, res) => {
-  const { title, description } = req.body;
+ 
     try {
       
+    const { title, description } = await createTaskSchema.validate(req.body);
  
     const task = await prisma.task.create({
       data: {
         title,
         description,
         organizationId: req.user.organizationId,
-        userId: 1,
+        userId: req.user.id,
       },
     });
     res.status(201).json(task);
   } catch (error) {
       console.error(error)
-    res.status(500).json({ error: 'Failed to create task' });
+    res.status(500).json({ error: error.message });
   }
 };
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const { title, description, completed } = req.body;
     try {
     
+    const payload = await updateTaskSchema.validate(req.body);
 
     const task = await prisma.task.update({
       where: { id: parseInt(id), organizationId:req.user.organizationId },
-      data: {
-        title,
-        description,
-        completed,
-      },
+      data: payload,
     });
     res.status(200).json(task);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update task' });
+    res.status(500).json({ error: error.message });
   }
 };
 
