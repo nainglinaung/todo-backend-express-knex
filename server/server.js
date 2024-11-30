@@ -15,6 +15,20 @@ app.use('/organization', organizationRouter);
 app.use('/project', projectRouter);
 app.use('/comment', commentRouter);
 
+// Global error handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  return res.status(statusCode).json({
+    status: 'error',
+    message: err.message
+  });
+  // res.status(statusCode).json({
+  //   status: 'error',
+  //   message: err.message || 'Internal Server Error',
+  //   ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  // });
+});
+
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -6,7 +6,7 @@
     "client": "cd client && yarn start",
     "server": "cd server && nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "test": "cd server && jest",
+    "test": "cd server && jest --coverage",
     "test:watch": "cd server && jest --watch",
     "start": "cd server && node server.js"
   },
@@ -21,10 +21,13 @@
     "lodash": "^4.17.15",
     "nodemon": "^2.0.2",
     "pg": "^7.14.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "concurrently": "^4.0.1",
+    "jest-mock-extended": "^2.0.9",
     "prisma": "^5.22.0"
   }
 }
