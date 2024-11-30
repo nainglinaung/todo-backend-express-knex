@@ -45,7 +45,10 @@ const update = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const tasks = await prisma.task.findMany({where:{organizationId:req.user.organizationId}});
+    const tasks = await (await prisma.task.findMany({
+      where: { organizationId: req.user.organizationId },
+      include: { comments: true },
+    }))
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve tasks' });
@@ -56,7 +59,8 @@ const get = async (req, res) => {
   const { id } = req.params;
   try {
     const task = await prisma.task.findUnique({
-      where: { id: parseInt(id), organizationId:req.user.organizationId },
+      where: { id: parseInt(id), organizationId: req.user.organizationId },
+      include: { comments: true },
     });
     if (task) {
       res.status(200).json(task);

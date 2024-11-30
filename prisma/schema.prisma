@@ -28,6 +28,7 @@ model Task {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   projectId      Int?
   project        Project? @relation(fields: [projectId], references: [id])
+  comments       Comment[]
 }
 
 model User {
@@ -41,6 +42,7 @@ model User {
   organizationId Int?
   organization   Organization? @relation(fields: [organizationId], references: [id])
   projects       Project[] @relation("UserProjects")
+  comments       Comment[]
 }
 model Project {
   id             Int      @id @default(autoincrement())
@@ -64,4 +66,15 @@ model Organization {
   users     User[]
   tasks     Task[]
   projects  Project[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }
