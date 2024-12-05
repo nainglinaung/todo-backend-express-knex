@@ -9,8 +9,11 @@ const createCommentSchema = yup.object({
 });
 
 const updateCommentSchema = yup.object({
-    text: yup.string(),
-    taskId: yup.number(),
+  text: yup.string(),
+  taskId: yup.number(),
+}).test('at-least-one-field', 'At least one field must be provided', value => {
+  return value.text !== undefined ||
+    value.taskId !== undefined 
 });
 
 

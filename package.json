@@ -6,7 +6,7 @@
     "client": "cd client && yarn start",
     "server": "cd server && nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "test": "cd server && jest --coverage",
+    "test": "cd server && jest --coverage -- comment",
     "test:watch": "cd server && jest --watch",
     "start": "cd server && node server.js"
   },

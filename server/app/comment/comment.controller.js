@@ -1,15 +1,11 @@
-// FILE: comment.controller.js
-
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../../database/prismaClient')
 const { createCommentSchema, updateCommentSchema } = require('./comment.schema');
 
 const create = async (req, res) => {
-  const { text, taskId } = req.body;
+ 
   try {
     const commentData = await createCommentSchema.validate(req.body);
-
-
+    
     const comment = await prisma.comment.create({
       data: {
         ...commentData,

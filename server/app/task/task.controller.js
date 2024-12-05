@@ -1,7 +1,4 @@
-// FILE: task.controller.js
-
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../../database/prismaClient')
 const { createTaskSchema, updateTaskSchema } = require('./task.schema');
 
 
